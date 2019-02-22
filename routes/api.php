@@ -17,6 +17,21 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::group(['middleware' => 'auth:api'], function () {
-    Route::get('/favorite', 'FavoriteController@index');
+Route::group([
+    'middleware' => 'auth:api',
+    'prefix' => 'favorite'
+], function ($router) {
+    Route::get('', 'FavoriteController@index');
+    Route::post('', 'FavoriteController@store');
+    Route::delete('{id}', 'FavoriteController@destroy');
+});
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'auth'
+], function ($router) {
+    Route::post('login', 'AuthController@login');
+    Route::post('logout', 'AuthController@logout');
+    Route::post('refresh', 'AuthController@refresh');
+    Route::post('me', 'AuthController@me');
 });
