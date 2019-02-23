@@ -27,6 +27,8 @@ Route::group([
     Route::delete('{id}', 'FavoriteController@destroy');
 });
 
+Route::post('register', 'RegisterController@register');
+
 Route::group([
     'middleware' => 'api',
     'prefix' => 'auth'
