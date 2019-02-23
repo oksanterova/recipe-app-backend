@@ -23,6 +23,7 @@ Route::group([
 ], function ($router) {
     Route::get('', 'FavoriteController@index');
     Route::post('', 'FavoriteController@store');
+    Route::patch('{id}', 'FavoriteController@update');
     Route::delete('{id}', 'FavoriteController@destroy');
 });
 

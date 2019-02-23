@@ -6,6 +6,7 @@ use App\Favorite;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Auth;
 use Validator;
 
 class FavoriteController extends Controller
@@ -19,7 +20,8 @@ class FavoriteController extends Controller
 
     public function index()
     {
-        $favorites = Favorite::get();
+        $user_id = Auth::user()->id;
+        $favorites = Favorite::where('user_id', '=', $user_id)->get();
 
         return response()->success(compact('favorites'));
     }
@@ -34,14 +36,26 @@ class FavoriteController extends Controller
             $favorite->recipe_id = $request->recipe_id;
             $favorite->recipe_label = $request->recipe_label;
             $favorite->recipe_image = $request->recipe_image;
+            $favorite->user_id = Auth::user()->id;
             $favorite->save();
             return response()->json($favorite);
         }
     }
 
+    public function update(Request $request, $id)
+    {
+        $user_id = Auth::user()->id;
+        $favorite = Favorite::where('user_id', '=', $user_id)->findOrFail($id);
+        $favorite->recipe_label = $request->recipe_label;
+        $favorite->save();
+
+        return response()->json($favorite);
+    }
+
     public function destroy($id)
     {
-        $favorite = Favorite::findOrFail($id);
+        $user_id = Auth::user()->id;
+        $favorite = Favorite::where('user_id', '=', $user_id)->findOrFail($id);
         $favorite->delete();
 
         return response()->json($favorite);
